@@ -1,4 +1,4 @@
-# 🔐 ForIAM
+# 🔐 ForIAM (Forever Identity and Access Management)
 
 A modern, modular, scalable Identity and Access Management (IAM) system — designed to be clean, extensible, and future-proof.
 
