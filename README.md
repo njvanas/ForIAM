@@ -1,3 +1,7 @@
+[![CI](https://github.com/njvanas/ForIAM/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/njvanas/ForIAM/actions/workflows/ci.yml)
+[![Release](https://github.com/njvanas/ForIAM/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/njvanas/ForIAM/actions/workflows/release.yml)
+[![Deploy + Coverage + Docker](https://github.com/njvanas/ForIAM/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/njvanas/ForIAM/actions/workflows/deploy.yml)
+
 # 🔐 ForIAM (Forever Identity and Access Management)
 
 A modern, modular, scalable Identity and Access Management (IAM) system — designed to be clean, extensible, and future-proof.
