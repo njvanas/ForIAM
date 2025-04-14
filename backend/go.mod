@@ -1,2 +1,3 @@
-cd backend
-go mod init github.com/ForIAM/ForIAM/backend
+module github.com/ForIAM/ForIAM/backend
+
+go 1.21
