@@ -1,4 +1,4 @@
-# 🔐 IAM Platform
+# 🔐 ForIAM
 
 A modern, modular, scalable Identity and Access Management (IAM) system — designed to be clean, extensible, and future-proof.
 
@@ -28,8 +28,8 @@ This platform provides:
 
 ### Steps:
 ```bash
-git clone https://github.com/your-org/iam-platform.git
-cd iam-platform
+git clone https://github.com/ForIAM/ForIAM.git
+cd ForIAM
 make up
 ```
 
@@ -143,3 +143,4 @@ This project is open for internal and external contributors. Reach out to the co
 ---
 
 > Identity is infrastructure. We're building it right, from the start.
+
