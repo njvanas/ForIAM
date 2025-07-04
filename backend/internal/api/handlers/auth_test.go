@@ -7,7 +7,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ForIAM/ForIAM/backend/internal/config"
 	"github.com/gin-gonic/gin"
 )
 
