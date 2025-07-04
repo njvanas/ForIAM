@@ -4,26 +4,70 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., v0.1.0)'
+        description: 'Version to release (e.g., v1.0.0)'
         required: true
+        type: string
+      release_notes:
+        description: 'Release notes'
+        required: false
+        type: string
+        default: 'New release'
 
 jobs:
-  tag-release:
+  create-release:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Validate version format
+      run: |
+        if [[ ! "${{ github.event.inputs.version }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          echo "Error: Version must be in format v1.2.3"
+          exit 1
+        fi
+
+    - name: Check if tag exists
+      run: |
+        if git tag -l | grep -q "^${{ github.event.inputs.version }}$"; then
+          echo "Error: Tag ${{ github.event.inputs.version }} already exists"
+          exit 1
+        fi
 
     - name: Set up Git
       run: |
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
 
-    - name: Create Git tag
+    - name: Create and push tag
       run: |
         git tag ${{ github.event.inputs.version }}
         git push origin ${{ github.event.inputs.version }}
 
-    - name: Confirm Tag Created
-      run: git tag
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.inputs.version }}
+        release_name: Release ${{ github.event.inputs.version }}
+        body: ${{ github.event.inputs.release_notes }}
+        draft: false
+        prerelease: false
+
+    - name: Trigger deploy workflow
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            workflow_id: 'deploy.yml',
+            ref: '${{ github.event.inputs.version }}',
+            inputs: {
+              environment: 'production'
+            }
+          });
