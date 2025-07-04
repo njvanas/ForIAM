@@ -2,14 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
-  test-backend:
+  test:
     runs-on: ubuntu-latest
-    name: Backend Tests
 
     services:
       postgres:
@@ -32,46 +31,57 @@ jobs:
           - 6379:6379
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: 1.21
+        go-version: '1.21'
 
     - name: Set up Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: '18'
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Cache Node modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
     - name: Install backend dependencies
       working-directory: ./backend
-      run: go mod tidy
+      run: go mod download
 
     - name: Run backend tests
       working-directory: ./backend
+      env:
+        DB_URL: postgres://iam:iam@localhost:5432/iam?sslmode=disable
+        REDIS_URL: localhost:6379
+        JWT_SECRET: test-secret
+        ENV: test
       run: go test ./...
-
-  test-frontend:
-    runs-on: ubuntu-latest
-    name: Frontend Tests
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
 
     - name: Install frontend dependencies
       working-directory: ./frontend
-      run: npm install
-
-    - name: Run frontend build
-      working-directory: ./frontend
-      run: npm run build
+      run: npm ci
 
     - name: Run frontend tests
       working-directory: ./frontend
       run: npm run test
+
+    - name: Run frontend build
+      working-directory: ./frontend
+      run: npm run build
