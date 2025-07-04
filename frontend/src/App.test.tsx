@@ -3,12 +3,12 @@ import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App'
 
-// Mock the auth context
+// Mock the auth context - define before using
 const MockAuthProvider = ({ children }: { children: React.ReactNode }) => {
   return <div data-testid="mock-auth-provider">{children}</div>
 }
 
-// Mock the components to avoid complex dependencies
+// Mock the auth context module
 vi.mock('./contexts/AuthContext', () => ({
   AuthProvider: MockAuthProvider,
   useAuth: () => ({
@@ -20,8 +20,19 @@ vi.mock('./contexts/AuthContext', () => ({
   })
 }))
 
+// Mock other components to avoid complex dependencies
 vi.mock('./pages/LoginPage', () => ({
   default: () => <div data-testid="login-page">Login Page</div>
+}))
+
+vi.mock('./pages/DashboardPage', () => ({
+  default: () => <div data-testid="dashboard-page">Dashboard Page</div>
+}))
+
+vi.mock('./components/Layout', () => ({
+  default: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="layout">{children}</div>
+  )
 }))
 
 describe('App', () => {

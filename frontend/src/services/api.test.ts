@@ -1,27 +1,45 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import axios from 'axios'
-import { authApi, usersApi } from './api'
 
-// Mock axios
+// Mock axios completely
 vi.mock('axios')
-const mockedAxios = vi.mocked(axios, true)
+
+// Mock the API module
+vi.mock('./api', () => ({
+  authApi: {
+    login: vi.fn(),
+    logout: vi.fn(),
+    getProfile: vi.fn()
+  },
+  usersApi: {
+    getUsers: vi.fn(),
+    createUser: vi.fn(),
+    updateUser: vi.fn(),
+    deleteUser: vi.fn()
+  },
+  rolesApi: {
+    getRoles: vi.fn(),
+    createRole: vi.fn(),
+    updateRole: vi.fn(),
+    deleteRole: vi.fn()
+  },
+  groupsApi: {
+    getGroups: vi.fn(),
+    createGroup: vi.fn(),
+    updateGroup: vi.fn(),
+    deleteGroup: vi.fn()
+  },
+  auditApi: {
+    getAuditLogs: vi.fn()
+  }
+}))
+
+// Import after mocking
+import { authApi, usersApi } from './api'
 
 describe('API Services', () => {
   beforeEach(() => {
     // Reset mocks before each test
     vi.clearAllMocks()
-    
-    // Mock axios.create to return a mock instance
-    mockedAxios.create.mockReturnValue({
-      interceptors: {
-        request: { use: vi.fn() },
-        response: { use: vi.fn() }
-      },
-      post: vi.fn(),
-      get: vi.fn(),
-      put: vi.fn(),
-      delete: vi.fn()
-    } as any)
   })
 
   afterEach(() => {
