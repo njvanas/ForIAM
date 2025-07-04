@@ -1,23 +1,16 @@
 package handlers
 
 import (
-	"bytes"
-	"database/sql"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
 )
 
 func TestUserHandler_GetUsers(t *testing.T) {
 	// Set Gin to test mode
 	gin.SetMode(gin.TestMode)
-
-	// Create a mock handler (without real DB for unit test)
-	handler := &UserHandler{db: nil}
 
 	// Create a test router
 	router := gin.New()

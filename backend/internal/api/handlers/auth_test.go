@@ -17,7 +17,6 @@ func TestAuthHandler_Login(t *testing.T) {
 	cfg := &config.Config{
 		JWTSecret: "test-secret",
 	}
-	handler := &AuthHandler{db: nil, cfg: cfg}
 
 	router := gin.New()
 	router.POST("/auth/login", func(c *gin.Context) {
