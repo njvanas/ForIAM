@@ -134,7 +134,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build and push backend
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v4
       with:
         context: ./backend
         push: true
@@ -145,7 +145,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Build and push frontend
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v4
       with:
         context: ./frontend
         push: true
