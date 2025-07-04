@@ -14,10 +14,6 @@ import (
 func TestAuthHandler_Login(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
-	cfg := &config.Config{
-		JWTSecret: "test-secret",
-	}
-
 	router := gin.New()
 	router.POST("/auth/login", func(c *gin.Context) {
 		// Mock successful login for test
