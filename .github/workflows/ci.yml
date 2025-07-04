@@ -2,13 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
-  build:
+  test-backend:
     runs-on: ubuntu-latest
+    name: Backend Tests
 
     services:
       postgres:
@@ -51,6 +52,18 @@ jobs:
       working-directory: ./backend
       run: go test ./...
 
+  test-frontend:
+    runs-on: ubuntu-latest
+    name: Frontend Tests
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
     - name: Install frontend dependencies
       working-directory: ./frontend
       run: npm install
@@ -58,3 +71,7 @@ jobs:
     - name: Run frontend build
       working-directory: ./frontend
       run: npm run build
+
+    - name: Run frontend tests
+      working-directory: ./frontend
+      run: npm run test
